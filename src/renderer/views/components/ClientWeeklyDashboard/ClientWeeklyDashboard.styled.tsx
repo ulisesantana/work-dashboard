@@ -16,6 +16,7 @@ export default styled.section<ViewWeeklyReport>`
     "worked worked"
     "left projects";
   overflow: hidden;
+  max-width: 500px;
   width: 100%;
 
   .progress {
@@ -60,9 +61,10 @@ export default styled.section<ViewWeeklyReport>`
     padding: 0;
 
     li {
+      background-color: deepskyblue;
       border: solid deepskyblue 2px;
       border-radius: 16px;
-      color: deepskyblue;
+      color: #4c4c4c;
       font-size: 50%;
       list-style: none;
       margin: 8px;

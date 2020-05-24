@@ -1,6 +1,6 @@
 import { fromMsToHumanTime } from "./index";
 
-describe("fromMsToHumanTime given milliseconds", () => {
+describe("get given milliseconds", () => {
   it('less than a minute should return "0 min"', () => {
     const halfMinute = 1000 * 30;
     expect(fromMsToHumanTime(halfMinute)).toBe("0 min");
