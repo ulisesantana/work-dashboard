@@ -26,8 +26,8 @@ let mainWindow: null | BrowserWindow;
 const createWindow = () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 600,
+    height: 1200,
     webPreferences: {
       nodeIntegration: true,
     },
