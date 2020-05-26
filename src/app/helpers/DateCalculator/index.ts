@@ -1,17 +1,4 @@
-enum Month {
-  January,
-  February,
-  March,
-  April,
-  May,
-  June,
-  July,
-  August,
-  September,
-  October,
-  November,
-  December,
-}
+enum Month
 
 const isLeapYear = (year: number) =>
   (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
@@ -45,9 +32,12 @@ const getLastDayOfThePreviousMonth = (d: Date) => {
 const getDate = (d: Date, removeDays = 0) => {
   const year = d.getFullYear();
   const month = d.getMonth();
-  const dayOfTheMonth = d.getDate() - removeDays;
+  const dayOfTheMonth =
+    d.getDate() < removeDays
+      ? removeDays - d.getDate()
+      : d.getDate() - removeDays;
 
-  if (dayOfTheMonth < 1) {
+  if (dayOfTheMonth <= removeDays) {
     const lastDayOfTheMonth = getLastDayOfThePreviousMonth(d);
 
     if (month === 0) {
@@ -60,7 +50,7 @@ const getDate = (d: Date, removeDays = 0) => {
   return `${year}-${month + 1}-${dayOfTheMonth}`;
 };
 
-export function getLastWorkday(day: Date): string {
+export function calcLastWorkday(day: Date): string {
   const weekDay = day.getDay();
 
   if (weekDay === 0) {
