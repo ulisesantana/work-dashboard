@@ -4,6 +4,7 @@ import {
   apiTokeUpdate,
   getClients,
   getClientWeeklyReport,
+  getLastDayReport,
 } from "./ipc.main";
 declare global {
   const MAIN_WINDOW_WEBPACK_ENTRY: string;
@@ -26,8 +27,8 @@ let mainWindow: null | BrowserWindow;
 const createWindow = () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 675,
+    width: 620,
+    height: 1080,
     webPreferences: {
       nodeIntegration: true,
     },
@@ -77,6 +78,8 @@ ipcMain.on("api-token-update", apiTokeUpdate);
 ipcMain.on("clients-get-request", getClients);
 
 ipcMain.on("client-weekly-report-request", getClientWeeklyReport);
+
+ipcMain.on("last-day-report-request", getLastDayReport);
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.

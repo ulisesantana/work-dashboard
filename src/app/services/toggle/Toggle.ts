@@ -1,5 +1,7 @@
 import { TogglClient, User } from "./entities";
 import fetch from "node-fetch";
+import { DateCalculator, Days } from "../../helpers/DateCalculator";
+import { SummaryReportResponse } from "./dto/Report/SummaryReportResponse";
 
 export const ToggleAPI = (() => {
   const apiUrl = "https://www.toggl.com/api/v8";
@@ -15,11 +17,8 @@ export const ToggleAPI = (() => {
       };
     },
 
-    login: async function (
-      username: string,
-      password: string,
-    ): Promise<User> {
-        console.debug('Toggle.login', username)
+    login: async function (username: string, password: string): Promise<User> {
+      console.debug("Toggle.login", username);
       const response = await fetch(`${apiUrl}/me`, {
         headers: this.getAuthHeaders(username, password),
       });
@@ -39,12 +38,9 @@ export const ToggleAPI = (() => {
     },
 
     getClients: async function (): Promise<TogglClient[]> {
-      const response = await fetch(
-        `${apiUrl}/clients`,
-        {
-          headers: this.getAuthHeaders(),
-        },
-      );
+      const response = await fetch(`${apiUrl}/clients`, {
+        headers: this.getAuthHeaders(),
+      });
       console.log("GET CLIENTS -", response.status);
       if (response.status === 200) {
         return await response.json();
@@ -52,21 +48,41 @@ export const ToggleAPI = (() => {
       throw new Error("Error getting client - " + response.statusText);
     },
 
-      getClientWeeklyReport: async function ({id, wid}: TogglClient): Promise<any> {
-          const response = await fetch(
-              `${apiUrlReport}/weekly?workspace_id=${wid}&client_ids=${id}&user_agent=${email}"`,
-              {
-                  headers: this.getAuthHeaders(),
-              },
-          );
-          console.log("GET CLIENTS WEEKLY REPORT-", response.status);
-          if (response.status === 200) {
-              return await response.json();
-          }
-          console.error(response.url);
-          throw new Error(
-              "Error getting client weekly report - " + response.statusText,
-          );
+    getClientWeeklyReport: async function ({
+      id,
+      wid,
+    }: TogglClient): Promise<any> {
+      const lastMonday = DateCalculator.calcLastWeekday(Days.Monday);
+      const url = `${apiUrlReport}/weekly?workspace_id=${wid}&client_ids=${id}&user_agent=${email}&since=${lastMonday}"`;
+      console.debug("REQUEST CLIENTS WEEKLY REPORT-", url);
+      const response = await fetch(url, {
+        headers: this.getAuthHeaders(),
+      });
+      console.log("GET CLIENTS WEEKLY REPORT-", response.status);
+      if (response.status === 200) {
+        return await response.json();
       }
+      console.error(response.url);
+      throw new Error(
+        "Error getting client weekly report - " + response.statusText,
+      );
+    },
+    getLastDayReport: async function (
+      workspaceId: string,
+    ): Promise<SummaryReportResponse> {
+      const lastWorkday = DateCalculator.calcLastWorkday();
+      const response = await fetch(
+        `${apiUrlReport}/summary?workspace_id=${workspaceId}&user_agent=${email}&since=${lastWorkday}"&until=${lastWorkday}`,
+        {
+          headers: this.getAuthHeaders(),
+        },
+      );
+      console.log("GET LAST DAY REPORT-", response.status);
+      if (response.status === 200) {
+        return await response.json();
+      }
+      console.error(response.url);
+      throw new Error("Error getting last day report - " + response.statusText);
+    },
   };
 })();

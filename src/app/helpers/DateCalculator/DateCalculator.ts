@@ -1,39 +1,115 @@
+export enum Days {
+  Sunday,
+  Monday,
+  Tuesday,
+  Wednesday,
+  Thursday,
+  Friday,
+  Saturday,
+}
+enum Months {
+  January,
+  February,
+  March,
+  April,
+  May,
+  June,
+  July,
+  August,
+  September,
+  October,
+  November,
+  December,
+}
+
 export class DateCalculator {
-  readonly Days = {
-    Sunday: 0,
-    Monday: 1,
-    Tuesday: 2,
-    Wednesday: 3,
-    Thursday: 4,
-    Friday: 5,
-    Saturday: 6,
-  };
-  readonly Months = {
-    January: 0,
-    February: 1,
-    March: 2,
-    April: 3,
-    May: 4,
-    June: 5,
-    July: 6,
-    August: 7,
-    September: 8,
-    October: 9,
-    November: 10,
-    December: 11,
-  };
+  static longestMonths = [
+    Months.January,
+    Months.March,
+    Months.May,
+    Months.July,
+    Months.August,
+    Months.October,
+    Months.December,
+  ];
+  static oneDayInMs = 86400000;
 
-  static calcLastWorkday(day: Date): string {
-    const weekDay = day.getDay();
+  static calcLastWorkday(date: Date = new Date()): string {
+    const weekDay = date.getDay();
 
-    if (weekDay === 0) {
-      return getDate(day, 2);
+    if (weekDay === Days.Sunday) {
+      return this.calcDay(date, 2);
     }
 
-    if (weekDay === 1) {
-      return getDate(day, 3);
+    if (weekDay === Days.Monday) {
+      return this.calcDay(date, 3);
     }
 
-    return getDate(day, 1);
+    return this.calcDay(date, 1);
   }
+
+  static calcLastWeekday(weekday: Days, date = new Date()) {
+    const week = this.calcDatesForLastWeek(date);
+    return week.find(([day]) => weekday === day)![1];
+  }
+
+  private static calcDatesForLastWeek(date = new Date()): [Days, string][] {
+    return Array.from({ length: 7 })
+      .map((irrelevant, i) => new Date(date.getTime() - this.oneDayInMs * i))
+      .map((date) => [date.getDay() as Days, this.toISODate(date)]);
+  }
+
+  private static calcDay(date: Date, removeDays = 0): string {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const dayOfTheMonth = this.calcDaysToRemove(date, removeDays);
+
+    if (dayOfTheMonth <= removeDays) {
+      const lastDayOfTheMonth = this.calcLastDayOfThePreviousMonth(date);
+
+      if (month === Months.January) {
+        return `${year - 1}-12-${lastDayOfTheMonth - dayOfTheMonth}`;
+      } else {
+        return `${year}-${month}-${lastDayOfTheMonth - dayOfTheMonth}`;
+      }
+    } else {
+      return `${year}-${month + 1}-${dayOfTheMonth}`;
+    }
+  }
+
+  private static calcDaysToRemove(d: Date, removeDays: number): number {
+    return d.getDate() < removeDays
+      ? removeDays - d.getDate()
+      : d.getDate() - removeDays;
+  }
+
+  private static calcLastDayOfThePreviousMonth(d: Date): number {
+    const year = d.getFullYear();
+    const month = d.getMonth();
+    const previousMonth = this.calcPreviousMonth(month);
+
+    if (previousMonth === Months.February) {
+      return this.isLeapYear(year) ? 29 : 28;
+    }
+
+    if (this.isLongMonth(previousMonth)) {
+      return 31;
+    }
+
+    return 30;
+  }
+
+  private static calcPreviousMonth(month: number): number {
+    return month === Months.January ? Months.December : month - 1;
+  }
+
+  private static isLeapYear(year: number): boolean {
+    return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
+  }
+
+  private static isLongMonth(month: number): boolean {
+    return this.longestMonths.includes(month);
+  }
+
+  private static toISODate = (d: Date) => d.toISOString().split("T")[0];
 }

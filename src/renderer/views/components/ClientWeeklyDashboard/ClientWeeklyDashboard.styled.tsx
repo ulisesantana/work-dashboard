@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { ViewWeeklyReport } from "../../types";
+import { ViewWeeklyReport } from "../../../types";
 
 const progressWidth = ({ percentageWorked }: ViewWeeklyReport) =>
   !!percentageWorked ? (percentageWorked <= 100 ? percentageWorked : 100) : 0;
@@ -9,29 +9,40 @@ export default styled.section<ViewWeeklyReport>`
   border-radius: 24px;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 20px 1fr 1fr;
+  grid-template-rows: 40px 20px 1fr 1fr;
   gap: 0;
   grid-template-areas:
+    "form form"
     "progress progress"
     "worked worked"
     "left projects";
-  overflow: hidden;
+  margin: 8px;
   max-width: 500px;
-  width: 100%;
+  overflow: hidden;
+  width: 500px;
+
+  .weekly-hours {
+    align-items: center;
+    display: flex;
+    grid-area: form;
+    justify-content: space-around;
+
+    span {
+      align-items: center;
+      display: flex;
+    }
+  }
 
   .progress {
-    background-color: lightblue;
-    border-radius: 24px 24px 0 0;
+    background-color: grey;
+    // border-radius: 24px 24px 0 0;
     grid-area: progress;
     overflow: hidden;
     width: 100%;
 
     span {
       display: block;
-      background-color: ${({ percentageWorked }) =>
-        !!percentageWorked && percentageWorked <= 100
-          ? "lightseagreen"
-          : "mediumspringgreen"};
+      background-color: mediumspringgreen;
       height: 100%;
       width: ${progressWidth}%;
     }
@@ -50,7 +61,7 @@ export default styled.section<ViewWeeklyReport>`
     justify-content: center;
     grid-area: left;
     background-color: ${({ leftHours }) =>
-      leftHours.includes("-") ? "blueviolet" : "transparent"};
+      !!leftHours && leftHours.includes("-") ? "blueviolet" : "transparent"};
   }
 
   .projects {
@@ -61,14 +72,7 @@ export default styled.section<ViewWeeklyReport>`
     padding: 0;
 
     li {
-      background-color: deepskyblue;
-      border: solid deepskyblue 2px;
-      border-radius: 16px;
-      color: #4c4c4c;
-      font-size: 50%;
       list-style: none;
-      margin: 8px;
-      padding: 2px 4px;
     }
   }
 `;

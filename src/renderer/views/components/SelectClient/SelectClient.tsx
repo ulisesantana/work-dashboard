@@ -6,30 +6,26 @@ import React, {
 } from "react";
 import { TogglClient } from "../../../../app/services/toggle";
 import { generateOnInputChange } from "../../handlers";
-import { ipcRenderer } from "electron";
+import StyledSelect from "./SelectClient.styled";
 
 export interface SelectClientProps {
   clients: TogglClient[];
-  onClientChange: (clientId: string) => void;
+  selected: string;
+  onClientChange: ChangeEventHandler;
 }
 
-export function SelectClient({ clients, onClientChange }: SelectClientProps) {
-  const [client, setClient] = useState(clients[0].id);
-  const onChangeSelectClient = useCallback(generateOnInputChange(setClient), [
-    setClient,
-  ]);
-
-  useEffect(() => {
-    onClientChange(client);
-  }, [client]);
-
+export function SelectClient({
+  clients,
+  onClientChange,
+  selected,
+}: SelectClientProps) {
   return (
-    <select onChange={onChangeSelectClient} value={client}>
+    <StyledSelect onChange={onClientChange} value={selected}>
       {clients.map(({ id, name }) => (
         <option key={id} value={id}>
           {name}
         </option>
       ))}
-    </select>
+    </StyledSelect>
   );
 }
