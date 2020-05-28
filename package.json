@@ -1,11 +1,11 @@
 {
-  "name": "create-electron-ts-react",
-  "productName": "electron-ts-react",
-  "version": "3.0.8",
-  "description": "Electron Typescript React Boilerplate / Starter",
+  "name": "work-dashboard",
+  "productName": "workDashboard",
+  "version": "0.1.0",
+  "description": "My Work Dashboard with some utils",
   "repository": {
     "type": "git",
-    "url": "https://github.com/saostad/Electron-React-Typescript.git"
+    "url": "https://github.com/ulisesantana/work-dashboard.git"
   },
   "bin": "./lib/setup.js",
   "main": ".webpack/main",
@@ -18,11 +18,8 @@
     "publishOnly": "electron-forge publish"
   },
   "keywords": [
-    "Electron",
-    "Typescript",
-    "React",
-    "Starter",
-    "Boilerplate"
+    "electron",
+    "toggl"
   ],
   "author": "Saeid Ostad",
   "license": "MIT",
@@ -33,7 +30,7 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "electron-ts-react"
+            "name": "workDashboard"
           }
         },
         {

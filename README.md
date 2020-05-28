@@ -1,4 +1,4 @@
-# Electron-React-Typescript
+# workDashboard
 
 Boilerplate for develop Electron application with React and Typescript
 
@@ -8,31 +8,20 @@ Boilerplate for develop Electron application with React and Typescript
 - React
 - Typescript
 - React Hot reloading
-- React-dev-tools
 - Eslint for Typescript linting
-
-and of course Webpack and Babel!
+- Styled Components
+- Redux
 
 ## How to use it
 
-### Easy way:
+npm:
 
-- `npm init electron-ts-react FOLDER_NAME VSCode`
-- `cd FOLDER_NAME`
-- `npm start`
+```
+npm i && npm start
+```
 
-### Alternative way:
+yarn:
 
-- git clone https://github.com/saostad/Electron-React-Typescript.git
-- npm install
-- npm start
-
-## Integrate in VSCode
-
-- in settings add :
-
-  `"eslint.validate": [ "javascript", "javascriptreact", { "language": "typescript", "autoFix": true }, { "language": "typescriptreact", "autoFix": true }]`
-
-## Next Steps:
-
-- add babel-eslint
+```
+yarn && yarn start
+```
