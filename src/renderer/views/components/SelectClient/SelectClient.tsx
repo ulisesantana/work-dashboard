@@ -10,7 +10,7 @@ import StyledSelect from "./SelectClient.styled";
 
 export interface SelectClientProps {
   clients: TogglClient[];
-  selected: string;
+  selected?: string;
   onClientChange: ChangeEventHandler;
 }
 

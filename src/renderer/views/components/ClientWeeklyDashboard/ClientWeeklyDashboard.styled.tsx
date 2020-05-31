@@ -8,24 +8,25 @@ export default styled.section<ViewWeeklyReport>`
   background-color: #4c4c4c;
   border-radius: 24px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 40px 20px 1fr 1fr;
+  grid-template-columns: 200px;
+  grid-template-rows: 40px 8px 40px 0.5fr 48px;
   gap: 0;
   grid-template-areas:
-    "form form"
-    "progress progress"
-    "worked worked"
-    "left projects";
+    "worked"
+    "progress"
+    "form"
+    "projects"
+    "menu";
   margin: 8px;
-  max-width: 500px;
+  max-width: 200px;
   overflow: hidden;
-  width: 500px;
+  width: 200px;
 
   .weekly-hours {
     align-items: center;
     display: flex;
     grid-area: form;
-    justify-content: space-around;
+    justify-content: center;
 
     span {
       align-items: center;
@@ -42,7 +43,12 @@ export default styled.section<ViewWeeklyReport>`
 
     span {
       display: block;
-      background-color: mediumspringgreen;
+      background: rgb(0, 128, 128);
+      background: linear-gradient(
+        90deg,
+        rgba(0, 128, 128, 1) 0%,
+        rgba(144, 238, 144, 1) 100%
+      );
       height: 100%;
       width: ${progressWidth}%;
     }
@@ -55,24 +61,77 @@ export default styled.section<ViewWeeklyReport>`
     justify-content: space-around;
   }
 
-  .left {
+  .menu {
     align-items: center;
     display: flex;
-    justify-content: center;
-    grid-area: left;
-    background-color: ${({ leftHours }) =>
-      !!leftHours && leftHours.includes("-") ? "blueviolet" : "transparent"};
+    justify-content: space-evenly;
+    grid-area: menu;
+    margin-top: 8px;
   }
 
   .projects {
     align-items: center;
     display: flex;
     grid-area: projects;
-    justify-content: center;
-    padding: 0;
+    padding: 0 8px;
+    flex-direction: column;
+
+    h3 {
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      width: 100%;
+    }
+
+    .left-time {
+      display: flex;
+      position: relative;
+      justify-content: center;
+      margin: 8px 0 8px 12px;
+      border-radius: 20px;
+      text-align: center;
+      width: fit-content;
+    }
+
+    .left-time:before {
+      align-self: baseline;
+      background-color: darkorange;
+      border-radius: 50%;
+      position: absolute;
+      display: ${({ leftHours }) =>
+        !!leftHours && leftHours.includes("-") ? "flex" : "none"};
+      content: "";
+      right: -12px;
+      height: 10px;
+      width: 10px;
+
+      animation-name: fade;
+      animation-duration: 2s;
+      animation-iteration-count: infinite;
+    }
+
+    @keyframes fade {
+      50% {
+        background-color: rgba(255, 140, 0, 0.2);
+      }
+      100% {
+        background-color: darkorange;
+        filter: drop-shadow(0px 0px 4px orangered);
+      }
+    }
+
+    ul {
+      align-items: center;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      margin: 0;
+      padding: 0;
+    }
 
     li {
       list-style: none;
+      padding: 4px;
     }
   }
 `;

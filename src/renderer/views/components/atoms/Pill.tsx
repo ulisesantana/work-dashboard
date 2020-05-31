@@ -1,10 +1,13 @@
 import styled from "styled-components";
 
 export const Pill = styled.small`
-  background-color: ${({ color }) => color || "deepskyblue"};
-  border: solid ${({ color }) => color || "deepskyblue"} 2px;
+  text-align: center;
+  display: inline-block;
+  background: teal;
   border-radius: 16px;
-  color: whitesmoke;
-  margin: 8px;
-  padding: 2px 4px;
+  color: white;
+  font-size: 60%;
+  font-weight: bold;
+  min-width: 48px;
+  padding: 4px 8px;
 `;

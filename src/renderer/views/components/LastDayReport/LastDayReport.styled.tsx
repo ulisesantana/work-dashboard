@@ -35,7 +35,7 @@ export default styled.section`
 
       .time {
         justify-content: flex-start;
-        color: lightslategray;
+        color: gray;
       }
 
       .client {

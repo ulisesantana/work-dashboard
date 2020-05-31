@@ -6,6 +6,7 @@ import "./style.css";
 import { ClientWeeklyDashboard, Login, Logout } from "./components";
 import { useElectronListener } from "./hooks";
 import { LastDayReport } from "./components/LastDayReport/LastDayReport";
+import { WeeklyDashboard } from "./containers/WeeklyDashboard";
 
 function App() {
   const { user, clients } = useElectronListener();
@@ -20,7 +21,7 @@ function App() {
 
           {!!clients && Object.keys(clients).length && (
             <div>
-              <ClientWeeklyDashboard clients={clients} />
+              <WeeklyDashboard clients={clients} />
             </div>
           )}
 

@@ -14,6 +14,7 @@ export interface ViewWeeklyReport {
   percentageWorked: number;
   client: string;
   projects: string[];
+  weekHours: number;
 }
 
 export interface TimeEntry {

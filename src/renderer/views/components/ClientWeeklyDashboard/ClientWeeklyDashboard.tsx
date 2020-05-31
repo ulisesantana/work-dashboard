@@ -1,121 +1,64 @@
-import React, {
-  ChangeEventHandler,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
-import { State } from "../../../types";
+import React, { ChangeEventHandler } from "react";
+import { ViewWeeklyReport } from "../../../types";
 import StyleWrapper from "./ClientWeeklyDashboard.styled";
 import { Pill } from "../atoms/Pill";
 import { InputRange, Spinner } from "../atoms";
-import { SelectClient } from "../SelectClient";
-import { generateOnInputChange } from "../../handlers";
-import { useDispatch, useSelector } from "react-redux";
-import { TogglClient } from "../../../../app/services/toggle/entities";
-import {
-  getWeeklyReports,
-  updateWeeklyReports,
-} from "../../../store/weeklyReports";
 import { Reload } from "../atoms/Reload";
-import { transformToViewWeeklyReport } from "../../helpers";
+import { Trash } from "@styled-icons/zondicons/Trash";
 
 interface ClientWeeklyDashboardProps {
-  clients: Record<string, TogglClient>;
+  report: ViewWeeklyReport;
+  onChange: ChangeEventHandler;
+  onReload?: () => void;
+  loading: boolean;
 }
 
-export function ClientWeeklyDashboard({ clients }: ClientWeeklyDashboardProps) {
-  const [client, setClient] = useState(Object.values(clients)[0]);
-  const [hours, setHours] = useState("35");
-  const { data, loading } = useSelector((state: State) => state.weeklyReports);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(getWeeklyReports(client));
-  }, []);
-
-  useEffect(() => {
-    const rawReport = data[client?.name];
-    if (rawReport) {
-      setHours(String(rawReport.weekHours));
-    }
-  }, [client]);
-
-  const report =
-    (data[client?.name] && transformToViewWeeklyReport(data[client?.name])) ||
-    {};
-  const onClickReload = useCallback(
-    () => dispatch(getWeeklyReports(client)),
-    [],
-  );
-  const onChangeHours = useCallback(
-    generateOnInputChange((newHours: string) => {
-      setHours(newHours);
-      dispatch(
-        updateWeeklyReports({ weekHours: +newHours, client: client.name }),
-      );
-    }),
-    [setHours, client],
-  );
-  const onChangeSelectClient = useCallback(
-    generateOnInputChange((clientId: string) => {
-      const newClient = clients[clientId];
-      if (newClient) {
-        setClient(newClient);
-        dispatch(getWeeklyReports(newClient));
-      }
-    }),
-    [setClient],
-  );
+export function ClientWeeklyDashboard({
+  report,
+  onChange,
+  onReload = () => console.log("Reloading..."),
+  loading,
+}: ClientWeeklyDashboardProps) {
+  const hours = report.weekHours || "35";
 
   return (
     <>
       {!!Object.keys(report) && (
         <StyleWrapper {...report}>
           <div className="weekly-hours">
-            <span>
-              {loading ? (
-                <Spinner size={24} />
-              ) : (
-                <Reload size={24} onClick={onClickReload} />
-              )}{" "}
-              &nbsp; Horas a la semana: {hours} &nbsp;
-              <InputRange
-                value={hours}
-                onChange={onChangeHours}
-                min={1}
-                max={40}
-              />
-            </span>
-            <SelectClient
-              selected={client?.id}
-              onClientChange={onChangeSelectClient}
-              clients={Object.values(clients)}
-            />
+            <InputRange value={hours} onChange={onChange} min={1} max={40} />
+            &nbsp; {hours} &nbsp;
           </div>
           <div className="progress">
             <span />
           </div>
           <div className="worked">
-            <div>
-              <small>Horas hechas: &nbsp;</small>
-              <div>{report.workedHours}</div>
-            </div>
-            <div>
-              <div>{report.percentageWorked}%</div>
-            </div>
+            <small>{report.workedHours}</small>
+            <div>{report.percentageWorked}%</div>
           </div>
-          <div className="left">
-            <small>Faltan: &nbsp;</small>
-            <div>{report.leftHours}</div>
+          <div className="menu">
+            {loading ? (
+              <Spinner size={24} />
+            ) : (
+              <Reload size={24} onClick={onReload} />
+            )}{" "}
+            <Trash size={24} />
           </div>
-          <ul className="projects">
-            {!!report.projects &&
-              report.projects.map((project) => (
-                <li className="project" key={project}>
-                  <Pill>{project}</Pill>
-                </li>
-              ))}
-          </ul>
+          <div className="projects">
+            <h3>{report.client}</h3>
+
+            <div className="left-time">
+              <span>{report.leftHours}</span>
+            </div>
+            <ul>
+              {!!report.projects &&
+                report.projects.map((project) => (
+                  <li className="project" key={project}>
+                    <Pill>{project}</Pill>
+                  </li>
+                ))}
+            </ul>
+          </div>
         </StyleWrapper>
       )}
     </>
