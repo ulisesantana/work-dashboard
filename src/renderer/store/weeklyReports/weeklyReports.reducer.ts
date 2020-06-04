@@ -3,9 +3,8 @@ import {
   WeeklyReportsActions,
   WeeklyReportsPayload,
 } from "./weeklyReports.actions";
-import { ViewLastDayReport, ViewWeeklyReport, WeeklyReport } from "../../types";
-import { act } from "react-dom/test-utils";
-import { transformToViewWeeklyReport } from "../../views/helpers";
+import { WeeklyReport } from "../../types";
+import { BrowserStore } from "../../views/helpers";
 
 const reduceEntriesToRecord = <T>(entries: [string, T][]): Record<string, T> =>
   entries.reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {});
@@ -15,14 +14,19 @@ export interface WeeklyReportState {
   loading: boolean;
 }
 
+interface WeeklyReportAction {
+  type: WeeklyReportsActions;
+  payload: WeeklyReportsPayload;
+}
+
 const initialState: WeeklyReportState = {
   data: {},
   loading: false,
 };
 
-export function weeklyReportsReducer(
+function reducer(
   state = initialState,
-  action: { type: WeeklyReportsActions; payload: WeeklyReportsPayload },
+  action: WeeklyReportAction,
 ): WeeklyReportState {
   console.debug("weeklyReportsReducer STORE before update:", state);
   switch (action.type) {
@@ -91,5 +95,22 @@ export function weeklyReportsReducer(
       };
     default:
       return state;
+  }
+}
+
+export function weeklyReportsReducer(
+  state: WeeklyReportState,
+  action: WeeklyReportAction,
+) {
+  const newState = reducer(state, action);
+
+  if (Object.keys(newState.data).length === 0) {
+    const storedState = BrowserStore.get("WeeklyReportState");
+    console.debug("GETTING WEEKLY REPORT FROM LOCAL STORAGE");
+    return storedState || newState;
+  } else {
+    console.debug("SAVING WEEKLY REPORT TO LOCAL STORAGE");
+    BrowserStore.set("WeeklyReportState", newState);
+    return newState;
   }
 }

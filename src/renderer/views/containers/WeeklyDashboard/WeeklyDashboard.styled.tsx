@@ -8,6 +8,8 @@ export default styled.section`
   width: 100%;
 
   .form {
+    padding: 8px;
+    padding-top: 12px;
   }
 
   .reports {
